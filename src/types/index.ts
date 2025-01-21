@@ -1,0 +1,49 @@
+interface User {
+  slug: string;
+  email: string;
+  password: string;
+  name: string;
+  college: string;
+  branch: string;
+  year: string;
+  phone: string;
+  libraryId: string;
+  isAdmin: boolean;
+  isSuperAdmin: boolean;
+  profilePicture: string;
+}
+
+interface Event {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  maxTeamSize: number;
+  minTeamSize: number;
+  registrationEndDate: Date;
+  registrationStartDate: Date;
+  eventDate: Date;
+  fees: number;
+  prize: number;
+  teams: Team[];
+}
+
+interface Team {
+  id: string;
+  eventId: string;
+  eventSlug: string;
+  leaderId: string;
+  TeamName: string;
+  createdAt: Date;
+  members: TeamMember[];
+  isRegisterd: boolean;
+  isVerified: boolean;
+}
+
+interface TeamMember {
+  id: string;
+  teamId: string;
+  teamName: string;
+  userId: string;
+  role: "LEADER" | "MEMBER";
+}
