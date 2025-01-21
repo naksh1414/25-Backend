@@ -33,7 +33,7 @@ interface Team {
   eventId: string;
   eventSlug: string;
   leaderId: string;
-  TeamName: string;
+  teamName: string;
   createdAt: Date;
   members: TeamMember[];
   isRegisterd: boolean;

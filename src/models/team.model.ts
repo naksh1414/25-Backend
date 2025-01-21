@@ -15,7 +15,7 @@ const teamSchema = new Schema({
     ref: "User",
     required: true,
   },
-  TeamName: {
+  teamName: {
     type: String,
     required: true,
   },
