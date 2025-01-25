@@ -1,3 +1,4 @@
+// user.model.ts
 import { Schema, model } from "mongoose";
 import { nanoid } from "nanoid";
 
@@ -20,20 +21,18 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  college: {
-    type: String,
-  },
-  branch: {
-    type: String,
-  },
-  year: {
-    type: String,
-  },
   phone: {
     type: String,
+    required: true,
+    unique: true,
   },
-  libraryId: {
+  otp: {
     type: String,
+    default: null,
+  },
+  otpExpiresAt: {
+    type: Date,
+    default: null,
   },
   isAdmin: {
     type: Boolean,

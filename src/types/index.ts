@@ -11,6 +11,8 @@ interface User {
   isAdmin: boolean;
   isSuperAdmin: boolean;
   profilePicture: string;
+  otp?: string | null; // Optional field for OTP verification
+  otpExpiresAt?: Date | null;
 }
 
 interface Event {
