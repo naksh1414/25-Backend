@@ -8,6 +8,7 @@ import { hashPassword, comparePassword } from "../utils/bcryptUtil";
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, phone, password } = req.body;
 
+
   try {
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
@@ -15,19 +16,15 @@ export const registerUser = async (req: Request, res: Response) => {
     }
 
     const hashedPassword = await hashPassword(password);
-    const otp = generateOTP();
-
+    
     const user = new UserModel({
       name,
       email,
       phone,
       password: hashedPassword,
-      otp,
-      otpExpiresAt: Date.now() + 300000, // OTP valid for 5 minutes
     });
     await user.save();
 
-    await sendOTP(phone, otp);
     res.status(201).json({ message: "User registered. OTP sent to phone." });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
