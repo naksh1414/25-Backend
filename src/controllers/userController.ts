@@ -5,7 +5,6 @@ import { UserModel } from "../models/user.model";
 import { generateToken } from "../services/jwtService";
 import { hashPassword, comparePassword } from "../utils/bcryptUtil";
 import { UserPayload } from "../types";
-
 import { STATUS_CODES } from "../constants/StatusCodes"
 import { MESSAGES } from "../constants/messages"
 import { sendSuccess, sendError } from "../utils/responseHandler";
@@ -52,6 +51,7 @@ export const verifyOTP = async (req: Request, res: Response) => {
       email: user.email,
       name: user.name,
       role: user.isAdmin ? "ADMIN" : "USER",
+      slug: user.slug ?? undefined,
     };
 
     const token = generateToken(userPayload);
@@ -75,6 +75,7 @@ export const loginUser = async (req: Request, res: Response) => {
       email: user.email,
       name: user.name,
       role: user.isAdmin ? "ADMIN" : "USER",
+      slug: user.slug ?? undefined,
     };
 
     const token = generateToken(userPayload);

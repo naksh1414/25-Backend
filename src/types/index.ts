@@ -20,6 +20,7 @@ export interface UserPayload {
   email: string;
   name: string;
   role?: string;
+  slug?: string;  
 }
 
 interface Event {

@@ -4,6 +4,7 @@ interface UserPayload {
   email: string;
   name: string;
   role?: string;
+  slug?: string;  
 }
 
 export const generateToken = (user:UserPayload): string => {
@@ -12,7 +13,8 @@ export const generateToken = (user:UserPayload): string => {
       id: user.id,
       email: user.email,
       name: user.name,
-      role: user.role
+      role: user.role,
+      slug: user.slug 
     },
     process.env.JWT_SECRET || "secret",
     { expiresIn: "24h" }
