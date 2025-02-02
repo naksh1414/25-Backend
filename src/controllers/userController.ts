@@ -1,22 +1,24 @@
 // userController.ts
 import { Request, Response } from "express";
 import { UserModel } from "../models/user.model";
-import { generateOTP, sendOTP } from "../services/otpService";
+// import { generateOTP, sendOTP } from "../services/otpService";
 import { generateToken } from "../services/jwtService";
 import { hashPassword, comparePassword } from "../utils/bcryptUtil";
+import { UserPayload } from "../types";
+
+import { STATUS_CODES } from "../constants/StatusCodes"
+import { MESSAGES } from "../constants/messages"
+import { sendSuccess, sendError } from "../utils/responseHandler";
 
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, phone, password } = req.body;
-
-
   try {
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already exists" });
     }
-
     const hashedPassword = await hashPassword(password);
-    
+
     const user = new UserModel({
       name,
       email,
@@ -25,9 +27,9 @@ export const registerUser = async (req: Request, res: Response) => {
     });
     await user.save();
 
-    res.status(201).json({ message: "User registered. OTP sent to phone." });
+    sendSuccess(res, MESSAGES.REGISTER_SUCCESS, null, STATUS_CODES.CREATED);
   } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
+    sendError(res, MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER, error);   
   }
 };
 
@@ -38,17 +40,24 @@ export const verifyOTP = async (req: Request, res: Response) => {
     const user = await UserModel.findOne({ phone });
 
     if (!user || user.otp !== otp || user.otpExpiresAt < new Date()) {
-      return res.status(400).json({ message: "Invalid or expired OTP" });
+      return sendError(res, MESSAGES.INVALID_OTP, STATUS_CODES.BAD_REQUEST);
     }
+    user.otp = "";
+    user.otpExpiresAt = new Date(0);
 
-    user.otp = null;
-    user.otpExpiresAt = null;
     await user.save();
 
-    const token = generateToken(user.id);
-    res.status(200).json({ message: "OTP verified", token });
+    const userPayload: UserPayload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.isAdmin ? "ADMIN" : "USER",
+    };
+
+    const token = generateToken(userPayload);
+    sendSuccess(res, MESSAGES.OTP_VERIFY_SUCCESS, { token });
   } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
+    sendError(res, MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER, error);
   }
 };
 
@@ -58,22 +67,29 @@ export const loginUser = async (req: Request, res: Response) => {
   try {
     const user = await UserModel.findOne({ email });
     if (!user || !(await comparePassword(password, user.password))) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return sendError(res, MESSAGES.INVALID_CREDENTIALS, STATUS_CODES.UNAUTHORIZED);
     }
 
-    const token = generateToken(user.id);
-    res.status(200).json({ message: "Login successful", token });
+    const userPayload: UserPayload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.isAdmin ? "ADMIN" : "USER",
+    };
+
+    const token = generateToken(userPayload);
+    sendSuccess(res, MESSAGES.LOGIN_SUCCESS, { token });
   } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
+    sendError(res, MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER, error);
   }
 };
 
 export const fetchAllUsers = async (_req: Request, res: Response) => {
   try {
     const users = await UserModel.find();
-    res.status(200).json(users);
+    sendSuccess(res, MESSAGES.FETCH_SUCCESS, { users });
   } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
+    sendError(res, MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER, error);
   }
 };
 
@@ -82,13 +98,15 @@ export const updateUser = async (req: Request, res: Response) => {
   const updateData = req.body;
 
   try {
-    const user = await UserModel.findByIdAndUpdate(userId, updateData, { new: true });
+    const user = await UserModel.findByIdAndUpdate(userId, updateData, {
+      new: true,
+    });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return sendError(res, MESSAGES.USER_NOT_FOUND, STATUS_CODES.NOT_FOUND);
     }
 
-    res.status(200).json({ message: "User updated", user });
+    sendSuccess(res, MESSAGES.UPDATE_SUCCESS, { user });
   } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
+    sendError(res, MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER, error);
   }
 };
