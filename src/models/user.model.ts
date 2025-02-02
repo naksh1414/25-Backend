@@ -1,12 +1,11 @@
 // user.model.ts
 import { Schema, model } from "mongoose";
-import { nanoid } from "nanoid";
+import { generateUniqueSlug } from "../utils/generateSlug";
 
 const userSchema = new Schema({
   slug: {
     type: String,
     unique: true,
-    default: () => nanoid(8),
   },
   email: {
     type: String,
@@ -46,6 +45,17 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
+});
+
+userSchema.pre('save', async function(next) {
+  if (this.isNew || this.isModified('name')) {
+    try {
+      this.slug = await generateUniqueSlug(this.name);
+    } catch (error: any) {
+      return next(error);
+    }
+  }
+  next();
 });
 
 export const UserModel = model("User", userSchema);

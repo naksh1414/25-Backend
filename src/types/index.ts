@@ -15,6 +15,14 @@ interface User {
   otpExpiresAt?: Date | null;
 }
 
+export interface UserPayload {
+  id: string;
+  email: string;
+  name: string;
+  role?: string;
+  slug?: string;  
+}
+
 interface Event {
   id: string;
   slug: string;
