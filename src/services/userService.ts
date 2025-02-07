@@ -4,16 +4,26 @@ import { hashPassword, comparePassword } from "../utils/bcryptUtil";
 import { UserPayload } from "../types";
 
 export class UserService {
-  async registerUser(userData: { name: string; email: string; phone: string; password: string }) {
+  async registerUser(userData: {
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+  }) {
     const { name, email, phone, password } = userData;
-    
+
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
       throw new Error("Email already exists");
     }
 
     const hashedPassword = await hashPassword(password);
-    const user = new UserModel({ name, email, phone, password: hashedPassword });
+    const user = new UserModel({
+      name,
+      email,
+      phone,
+      password: hashedPassword,
+    });
 
     await user.save();
     return user;
@@ -30,11 +40,10 @@ export class UserService {
     user.otpExpiresAt = new Date(0);
     await user.save();
 
-    const userPayload: UserPayload = {
+    const userPayload: Partial<UserPayload> = {
       id: user.id,
       email: user.email,
       name: user.name,
-      role: user.isAdmin ? "ADMIN" : "USER",
       slug: user.slug ?? undefined,
     };
 
@@ -48,12 +57,13 @@ export class UserService {
       throw new Error("Invalid credentials");
     }
 
-    const userPayload: UserPayload = {
+    const userPayload: Partial<UserPayload> = {
       id: user.id,
       email: user.email,
       name: user.name,
-      role: user.isAdmin ? "ADMIN" : "USER",
       slug: user.slug ?? undefined,
+      isAdmin: user.isAdmin,
+      isSuperAdmin: user.isSuperAdmin,
     };
 
     return generateToken(userPayload);
@@ -64,7 +74,9 @@ export class UserService {
   }
 
   async updateUser(userId: string, updateData: any) {
-    const user = await UserModel.findByIdAndUpdate(userId, updateData, { new: true });
+    const user = await UserModel.findByIdAndUpdate(userId, updateData, {
+      new: true,
+    });
 
     if (!user) {
       throw new Error("User not found");

@@ -8,6 +8,7 @@ export const MESSAGES = {
     EVENT_CREATED:"Event created successfully",
     EVENT_UPDATED:"Event updated successfully",
     EVENT_DELETED:"Event deleted successfully",
+    EVENT_FETCH:"Event fetched successfully",
   
     // Error messages
     EMAIL_EXISTS: "Email already exists",

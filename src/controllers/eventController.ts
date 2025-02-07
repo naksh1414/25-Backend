@@ -46,7 +46,7 @@ export class EventController {
   async getAllEvents(_req: Request, res: Response) {
     try {
       const events = await eventService.getAllEvents();
-      sendSuccess(res, MESSAGES.FETCH_SUCCESS, { events });
+      sendSuccess(res, MESSAGES.EVENT_FETCH, { events });
     } catch (error) {
       sendError(res, MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER, error);
     }
@@ -59,7 +59,7 @@ export class EventController {
       if (!event) {
         return sendError(res, MESSAGES.EVENT_NOT_FOUND, STATUS_CODES.NOT_FOUND);
       }
-      sendSuccess(res, MESSAGES.FETCH_SUCCESS, { event });
+      sendSuccess(res, MESSAGES.EVENT_FETCH, { event });
     } catch (error) {
       sendError(res, MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER, error);
     }
