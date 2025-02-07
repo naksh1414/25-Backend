@@ -20,7 +20,9 @@ export interface UserPayload {
   email: string;
   name: string;
   role?: string;
-  slug?: string;  
+  slug?: string;
+  isAdmin: boolean;
+  isSuperAdmin: boolean;
 }
 
 interface Event {

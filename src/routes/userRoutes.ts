@@ -1,13 +1,14 @@
-import express, { RequestHandler } from "express";
-import { registerUser, verifyOTP, loginUser, fetchAllUsers, updateUser } from "../controllers/userController";
+import express from "express";
+import { UserController } from "../controllers/userController";
 import { authenticate } from "../middlewares/authMiddleware";
 
 const router = express.Router();
+const userController = new UserController();
 
-router.post("/register", registerUser as RequestHandler);
-router.post("/verify-otp", verifyOTP as RequestHandler);
-router.post("/login", loginUser as RequestHandler);
-router.get("/users", authenticate as RequestHandler, fetchAllUsers as RequestHandler);
-router.put("/users/:userId", authenticate as RequestHandler, updateUser as RequestHandler);
+router.post("/register", (req, res) => userController.registerUser(req, res));
+router.post("/verify-otp", (req, res) => userController.verifyOTP(req, res));
+router.post("/login", (req, res) => userController.loginUser(req, res));
+router.get("/users", authenticate, (req, res) => userController.fetchAllUsers(req, res));
+router.put("/users/:userId", authenticate, (req, res) => userController.updateUser(req, res));
 
 export default router;
