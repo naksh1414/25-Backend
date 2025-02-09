@@ -9,6 +9,9 @@ export const MESSAGES = {
     EVENT_UPDATED:"Event updated successfully",
     EVENT_DELETED:"Event deleted successfully",
     EVENT_FETCH:"Event fetched successfully",
+    TEAM_ADDED:"Team added successfully",
+    TEAM_FETCH:"Team fetched successfully",
+    MEMBER_FETCH:"Member fetched successfully",
   
     // Error messages
     EMAIL_EXISTS: "Email already exists",

@@ -2,6 +2,9 @@ import { UserModel } from "../models/user.model";
 import { generateToken } from "../services/jwtService";
 import { hashPassword, comparePassword } from "../utils/bcryptUtil";
 import { UserPayload } from "../types";
+import { EventModel } from "../models/event.model";
+import { TeamModel } from "../models/team.model";
+import { TeamMemberModel } from "../models/members.model";
 
 export class UserService {
   async registerUser(userData: {
@@ -28,6 +31,7 @@ export class UserService {
     await user.save();
     return user;
   }
+
 
   async verifyOTP(phone: string, otp: string) {
     const user = await UserModel.findOne({ phone });

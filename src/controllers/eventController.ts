@@ -64,4 +64,5 @@ export class EventController {
       sendError(res, MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER, error);
     }
   }
+
 }

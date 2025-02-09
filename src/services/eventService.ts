@@ -8,7 +8,9 @@ export class EventService {
   }
 
   async updateEvent(slug: string, eventData: any) {
-    return await EventModel.findOneAndUpdate({ slug }, eventData, { new: true });
+    return await EventModel.findOneAndUpdate({ slug }, eventData, {
+      new: true,
+    });
   }
 
   async deleteEvent(slug: string) {
