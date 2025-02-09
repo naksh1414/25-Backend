@@ -2,9 +2,6 @@ import { UserModel } from "../models/user.model";
 import { generateToken } from "../services/jwtService";
 import { hashPassword, comparePassword } from "../utils/bcryptUtil";
 import { UserPayload } from "../types";
-import { EventModel } from "../models/event.model";
-import { TeamModel } from "../models/team.model";
-import { TeamMemberModel } from "../models/members.model";
 
 export class UserService {
   async registerUser(userData: {
