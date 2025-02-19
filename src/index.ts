@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { connectDB } from "./db";
 import userRoutes from "./routes/userRoutes";
 import eventRoutes from "./routes/eventRoutes"
+import teamRoutes from "./routes/teamRoutes"
 dotenv.config();
 
 const app = express();
@@ -14,6 +15,7 @@ connectDB()
 
 app.use("/api/v1", userRoutes);
 app.use("/api/v1", eventRoutes);
+app.use("/api/v1", teamRoutes);
 
 
 app.get("/", (req, res) => {

@@ -29,6 +29,7 @@ export class UserService {
     return user;
   }
 
+
   async verifyOTP(phone: string, otp: string) {
     const user = await UserModel.findOne({ phone });
 

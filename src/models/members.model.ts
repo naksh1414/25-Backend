@@ -30,4 +30,7 @@ const teamMemberSchema = new Schema({
   },
 });
 
+
+teamMemberSchema.index({ teamId: 1, userId: 1 }, { unique: true });
+
 export const TeamMemberModel = model("TeamMember", teamMemberSchema);
