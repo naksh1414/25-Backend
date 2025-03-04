@@ -19,5 +19,8 @@ router.put("/users/:userId", authenticate, (req, res) =>
   userController.updateUser(req, res)
 );
 
+router.post("/users/flagKit", (req, res) =>
+  userController.flagKit(req, res)
+);
 
 export default router;

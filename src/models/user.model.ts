@@ -45,6 +45,10 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
+  kitTaken:{
+    type: Boolean,
+    default: false,
+  }
 });
 
 userSchema.pre('save', async function(next) {

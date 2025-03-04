@@ -41,6 +41,22 @@ export class UserController {
       );
     }
   }
+  
+  async flagKit(req: Request, res: Response) {
+    try {
+      const token = await this.userService.flagKit(
+        req.body
+      );
+      sendSuccess(res, MESSAGES.KIT_FLAGGED);
+    } catch (error: any) {
+      sendError(
+        res,
+        error.message || MESSAGES.SERVER_ERROR,
+        STATUS_CODES.UNAUTHORIZED,
+        error
+      );
+    }
+  }
 
   async loginUser(req: Request, res: Response) {
     try {

@@ -29,6 +29,24 @@ export class UserService {
     return user;
   }
 
+  async flagKit(userData: {
+    userId: string; 
+  }) {
+    const {  userId } = userData;
+
+    const existingUser = await UserModel.findById(userId);
+    if (!existingUser) {
+      throw new Error("User not found");
+    }
+
+    if (existingUser.kitTaken) {
+      throw new Error("Kit already given");
+    }
+
+    existingUser.kitTaken = true;
+    await existingUser.save();
+
+  }
 
   async verifyOTP(phone: string, otp: string) {
     const user = await UserModel.findOne({ phone });
