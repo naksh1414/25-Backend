@@ -6,6 +6,7 @@ interface TeamMember {
   teamName: string;
   userId: string;
   role: "LEADER" | "MEMBER";
+  teamCode: string;
 }
 
 const teamMemberSchema = new Schema({
@@ -28,6 +29,10 @@ const teamMemberSchema = new Schema({
     enum: ["LEADER", "MEMBER"],
     required: true,
   },
+  teamCode:{
+    type: String,
+    required: true,
+  }
 });
 
 

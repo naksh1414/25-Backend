@@ -18,6 +18,8 @@ export class TeamService {
       throw new Error("Event not exists");
     }
 
+    const teamCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+
     const existingTeam = await TeamModel.findOne({ eventId, teamName });
     if (existingTeam) {
       throw new Error("Team name already exists for this event");
@@ -36,6 +38,7 @@ export class TeamService {
       teamName,
       isVerified,
       isRegisterd: true,
+      teamCode
     });
 
     const existingMember = await TeamMemberModel.findOne({
@@ -52,6 +55,7 @@ export class TeamService {
       teamName: team.teamName,
       userId: leaderId,
       role: "LEADER",
+      teamCode,
     });
 
     await member.save();
@@ -66,13 +70,12 @@ export class TeamService {
   }
 
   async joinTeam(TeamData: {
-    teamId: string;
-    teamName: string;
     userId: string;
+    teamCode: string;
   }) {
-    const { teamId, teamName, userId } = TeamData;
+    const { teamCode, userId } = TeamData;
 
-    const existingTeam = await TeamModel.findOne({ _id: teamId, teamName });
+    const existingTeam = await TeamModel.findOne({ teamCode });
     if (!existingTeam) {
       throw new Error("Team not exists");
     }
@@ -91,8 +94,7 @@ export class TeamService {
 
     const existingMember = await TeamMemberModel.findOne({
       userId,
-      teamId,
-      teamName,
+      teamCode
     });
 
     if (existingMember) {
@@ -100,8 +102,9 @@ export class TeamService {
     }
 
     const member = new TeamMemberModel({
-      teamId,
-      teamName,
+      teamId: existingTeam.id,
+      teamCode,
+      teamName: existingTeam.teamName,
       userId,
       role: "MEMBER",
     });

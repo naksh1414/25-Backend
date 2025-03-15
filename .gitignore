@@ -28,3 +28,5 @@ out/
 commit.sh
 
 .env
+.env.local
+.env

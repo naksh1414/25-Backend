@@ -37,6 +37,10 @@ const teamSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  teamCode:{
+    type: String,
+    required: true,
+  }
 });
 
 export const TeamModel = model("Team", teamSchema);
