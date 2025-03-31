@@ -85,7 +85,12 @@ export class UserService {
       isSuperAdmin: user.isSuperAdmin,
     };
 
-    return generateToken(userPayload);
+    const data = {
+      token : generateToken(userPayload),
+      userPayload : userPayload
+    }
+
+    return data;
   }
 
   async fetchAllUsers() {
