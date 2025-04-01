@@ -18,4 +18,12 @@ router.post("/team/members",  (req, res) =>
   teamController.getMembersByTeamId(req, res)
 );
 
+router.get("/teams/:id", authenticate, (req, res) =>
+  teamController.getTeamById(req, res)
+);
+
+router.get("/user/teams", authenticate, (req, res) =>
+  teamController.getUserRegisteredEvents(req, res)
+);
+
 export default router;

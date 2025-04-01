@@ -48,7 +48,11 @@ const userSchema = new Schema({
   kitTaken:{
     type: Boolean,
     default: false,
-  }
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 userSchema.pre('save', async function(next) {

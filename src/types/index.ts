@@ -12,6 +12,7 @@ interface User {
   isSuperAdmin: boolean;
   profilePicture: string;
   otp?: string | null; // Optional field for OTP verification
+  isVerified: boolean; // Added field for email verification status
   otpExpiresAt?: Date | null;
 }
 

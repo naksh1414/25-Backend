@@ -13,6 +13,10 @@ export const MESSAGES = {
     TEAM_FETCH:"Team fetched successfully",
     MEMBER_FETCH:"Member fetched successfully",
     KIT_FLAGGED:"Kit flagged successfully",
+    PASSWORD_RESET_SUCCESS: "Password reset successfully",
+    FORGOT_PASSWORD_SUCCESS: "Password reset OTP sent successfully",
+    OTP_RESENT_SUCCESS: "OTP resent successfully",
+    EVENTS_FETCH: "Events fetched successfully",
   
     // Error messages
     EMAIL_EXISTS: "Email already exists",

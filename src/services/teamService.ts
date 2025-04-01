@@ -4,6 +4,39 @@ import { TeamModel } from "../models/team.model";
 import { TeamMemberModel } from "../models/members.model";
 
 export class TeamService {
+
+  // Add this method to TeamService
+async fetchUserRegisteredEvents(userId: string) {
+  // Find teams where user is the leader
+  const leaderTeams = await TeamModel.find({ leaderId: userId, isRegisterd: true })
+    .populate('eventId', 'name description startDate endDate venue image')
+    .lean();
+    
+  // Find team members where user is a member
+  const memberEntries = await TeamMemberModel.find({ userId, role: "MEMBER" });
+  
+  // Get team IDs where user is a member
+  const teamIds = memberEntries.map(entry => entry.teamId);
+  
+  // Find those teams
+  const memberTeams = await TeamModel.find({ 
+    _id: { $in: teamIds }, 
+    isRegisterd: true 
+  })
+    .populate('eventId', 'name description startDate endDate venue image')
+    .lean();
+  
+  // Combine both results
+  const allTeams = [...leaderTeams, ...memberTeams];
+  
+  return allTeams;
+}
+async getTeamById(teamId: string) {
+  return await TeamModel.findById(teamId)
+    .populate('eventId', 'name description startDate endDate venue image')
+    .lean();
+}
+
   async addTeam(TeamData: {
     eventId: string;
     eventSlug: string;
@@ -112,7 +145,11 @@ export class TeamService {
 
     await existingTeam.save();
 
-    return member;
+    // Return both member and team data to allow frontend to update properly
+    return {
+      member,
+      team: existingTeam
+    };
   }
 
   async fetchAllMembers() {
@@ -120,7 +157,9 @@ export class TeamService {
   }
 
   async fetchTeamsbyEventId(eventId: string) {
-    return await TeamModel.find({ eventId });
+    return await TeamModel.find({ eventId })
+      .populate('eventId', 'name description startDate endDate venue image')
+      .lean();
   }
 
   async fetchMembersbyTeamId(teamId: string) {
