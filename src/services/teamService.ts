@@ -38,7 +38,7 @@ export class TeamService {
       teamName,
       isVerified,
       isRegisterd: true,
-      teamCode
+      teamCode,
     });
 
     const existingMember = await TeamMemberModel.findOne({
@@ -69,10 +69,7 @@ export class TeamService {
     return team;
   }
 
-  async joinTeam(TeamData: {
-    userId: string;
-    teamCode: string;
-  }) {
+  async joinTeam(TeamData: { userId: string; teamCode: string }) {
     const { teamCode, userId } = TeamData;
 
     const existingTeam = await TeamModel.findOne({ teamCode });
@@ -94,7 +91,7 @@ export class TeamService {
 
     const existingMember = await TeamMemberModel.findOne({
       userId,
-      teamCode
+      teamCode,
     });
 
     if (existingMember) {
@@ -121,7 +118,6 @@ export class TeamService {
   async fetchAllMembers() {
     return await TeamMemberModel.find();
   }
-
 
   async fetchTeamsbyEventId(eventId: string) {
     return await TeamModel.find({ eventId });
