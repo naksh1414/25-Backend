@@ -17,6 +17,10 @@ export class EventService {
     return await EventModel.findOneAndDelete({ slug });
   }
 
+  async flagDeleteEvent(slug: string) {
+    return await EventModel.findOneAndUpdate({ slug }, { isDeleted: true }, { new: true });
+  }
+
   async getAllEvents() {
     return await EventModel.find();
   }

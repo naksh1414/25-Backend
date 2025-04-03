@@ -26,6 +26,10 @@ const eventSchema = new Schema(
       required: true,
       min: [1, "Minimum team size must be at least 1"],
     },
+    isDeleted:{
+      type: Boolean,
+      default: false,
+    },
     maxTeamSize: {
       type: Number,
       required: true,
