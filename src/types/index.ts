@@ -21,7 +21,13 @@ export interface UserPayload {
   email: string;
   name: string;
   role?: string;
+  rollNo?: string;
+  college?: string;
+  libId?: string;
+  age?: number;
   slug?: string;
+  profilePicture?: string;
+  gender? : string;
   isAdmin: boolean;
   isSuperAdmin: boolean;
 }

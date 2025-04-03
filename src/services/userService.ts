@@ -15,8 +15,23 @@ export class UserService {
     email: string;
     phone: string;
     password: string;
+    rollNo: string;
+    college: string;
+    libId: string;
+    age: number;
+    gender: string;
   }) {
-    const { name, email, phone, password } = userData;
+    const {
+      name,
+      email,
+      phone,
+      password,
+      rollNo,
+      libId,
+      college,
+      age,
+      gender,
+    } = userData;
 
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
@@ -28,31 +43,34 @@ export class UserService {
       name,
       email,
       phone,
+      rollNo,
+      college,
+      age,
+      gender,
+      libId,
       password: hashedPassword,
       isVerified: false, // Added isVerified field
     });
 
     await user.save();
-      // Generate and store OTP
-      const otp = generateOTP();
-      const newOTP = new OTPModel({
-        user: user._id,
-        email,
-        otp,
-        type: "VERIFICATION",
-        expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
-      });
-      await newOTP.save();
-  
-      // Send OTP email
-      await this.sendVerificationEmail(email, name, otp);
+    // Generate and store OTP
+    const otp = generateOTP();
+    const newOTP = new OTPModel({
+      user: user._id,
+      email,
+      otp,
+      type: "VERIFICATION",
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
+    });
+    await newOTP.save();
+
+    // Send OTP email
+    await this.sendVerificationEmail(email, name, otp);
     return user;
   }
 
-  async flagKit(userData: {
-    userId: string; 
-  }) {
-    const {  userId } = userData;
+  async flagKit(userData: { userId: string }) {
+    const { userId } = userData;
 
     const existingUser = await UserModel.findById(userId);
     if (!existingUser) {
@@ -65,7 +83,6 @@ export class UserService {
 
     existingUser.kitTaken = true;
     await existingUser.save();
-
   }
 
   async verifyOTP(email: string, otp: string) {
@@ -104,7 +121,7 @@ export class UserService {
 
     return generateToken(userPayload);
   }
-  
+
   async resendOTP(email: string): Promise<void> {
     // Find user by email
     const user = await UserModel.findOne({ email });
@@ -129,7 +146,7 @@ export class UserService {
     // Send OTP email
     await this.sendVerificationEmail(email, user.name, otp);
   }
-  
+
   async forgotPassword(email: string): Promise<void> {
     // Find user by email
     const user = await UserModel.findOne({ email });
@@ -154,8 +171,12 @@ export class UserService {
     // Send password reset email
     await this.sendPasswordResetEmail(email, user.name, otp);
   }
-  
-  async resetPassword(email: string, otp: string, newPassword: string): Promise<void> {
+
+  async resetPassword(
+    email: string,
+    otp: string,
+    newPassword: string
+  ): Promise<void> {
     // Find user by email
     const user = await UserModel.findOne({ email });
     if (!user) {
@@ -192,7 +213,7 @@ export class UserService {
     if (!user || !(await comparePassword(password, user.password))) {
       throw new Error("Invalid credentials");
     }
-    
+
     // Check if user is verified
     if (!user.isVerified) {
       throw new Error("Account not verified. Please verify your email first.");
@@ -202,6 +223,12 @@ export class UserService {
       id: user.id,
       email: user.email,
       name: user.name,
+      rollNo: user.rollNo,
+      college: user.college,
+      libId: user.libId,
+      gender: user.gender,
+      age: user.age,
+      profilePicture: user.profilePicture,
       slug: user.slug ?? undefined,
       isAdmin: user.isAdmin,
       isSuperAdmin: user.isSuperAdmin,
@@ -209,13 +236,11 @@ export class UserService {
 
     const data = {
       token: generateToken(userPayload),
-      userPayload: userPayload
+      userPayload: userPayload,
     };
 
     return data;
   }
-
-
 
   async fetchAllUsers() {
     return await UserModel.find();
@@ -225,32 +250,34 @@ export class UserService {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       throw new Error("Invalid user ID format");
     }
-  
+
     // Fetch the user first to check if they exist
     let user = await UserModel.findById(userId);
     if (!user) {
       throw new Error("User not found");
     }
-  
+
     // If name is being updated, generate a new slug
     if (updateData.name && updateData.name !== user.name) {
       updateData.slug = await generateUniqueSlug(updateData.name);
     }
-  
+
     // Perform the update
     user = await UserModel.findOneAndUpdate(
       { _id: userId },
       { $set: updateData },
       { new: true, runValidators: true }
     );
-  
+
     return user;
   }
-  
-  
-  
+
   // Helper methods for sending emails
-  private async sendVerificationEmail(email: string, name: string, otp: string): Promise<void> {
+  private async sendVerificationEmail(
+    email: string,
+    name: string,
+    otp: string
+  ): Promise<void> {
     const subject = "Verify Your Email - OTP";
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
@@ -268,7 +295,11 @@ export class UserService {
     await sendEmail(email, subject, html);
   }
 
-  private async sendPasswordResetEmail(email: string, name: string, otp: string): Promise<void> {
+  private async sendPasswordResetEmail(
+    email: string,
+    name: string,
+    otp: string
+  ): Promise<void> {
     const subject = "Password Reset - OTP";
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
