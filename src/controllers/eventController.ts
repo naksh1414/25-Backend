@@ -43,6 +43,19 @@ export class EventController {
     }
   }
 
+  async flagDeleteEvent(req: Request, res: Response) {
+    try {
+      const { slug } = req.body;
+      const event = await eventService.flagDeleteEvent(slug);
+      if (!event) {
+        return sendError(res, MESSAGES.EVENT_NOT_FOUND, STATUS_CODES.NOT_FOUND);
+      }
+      sendSuccess(res, MESSAGES.EVENT_DELETED);
+    } catch (error) {
+      sendError(res, MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER, error);
+    }
+  }
+
   async getAllEvents(_req: Request, res: Response) {
     try {
       const events = await eventService.getAllEvents();
