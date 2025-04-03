@@ -1,4 +1,3 @@
-// user.model.ts
 import { Schema, model } from "mongoose";
 import { generateUniqueSlug } from "../utils/generateSlug";
 
@@ -25,6 +24,28 @@ const userSchema = new Schema({
     required: true,
     unique: true,
   },
+  rollNo: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  college: {
+    type: String,
+    required: true,
+  },
+  libId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  gender: {
+    type: String,
+    required: true,
+  },
+  age: {
+    type: Number,
+    required: true,
+  },
   otp: {
     type: String,
     default: null,
@@ -45,7 +66,7 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
-  kitTaken:{
+  kitTaken: {
     type: Boolean,
     default: false,
   },
@@ -55,8 +76,8 @@ const userSchema = new Schema({
   },
 });
 
-userSchema.pre('save', async function(next) {
-  if (this.isNew || this.isModified('name')) {
+userSchema.pre("save", async function (next) {
+  if (this.isNew || this.isModified("name")) {
     try {
       this.slug = await generateUniqueSlug(this.name);
     } catch (error: any) {
