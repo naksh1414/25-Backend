@@ -1,8 +1,6 @@
 import { Schema, model } from "mongoose";
 import { generateUniqueSlug } from "../utils/generateSlug";
 
-
-
 const eventSchema = new Schema(
   {
     slug: {
@@ -69,6 +67,21 @@ const eventSchema = new Schema(
       required: true,
       min: [0, "Fees cannot be negative"],
     },
+    // Added poster field
+    poster: {
+      type: String,
+    },
+    // Added QR code field
+    qrcode: {
+      type: String,
+    },
+    // Added FAQ field as an array of question-answer pairs
+    faq: [
+      {
+        ques: { type: String, required: true },
+        ans: { type: String, required: true }
+      }
+    ],
     prize: [
       {
         position: { type: String, required: true },
