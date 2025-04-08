@@ -69,6 +69,15 @@ export class UserService {
     return user;
   }
 
+  async getUser(userId: string) {
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      throw new Error("Invalid user ID format");
+    }
+
+    return await UserModel.findById(userId);
+  }
+
   async flagKit(userData: { userId: string }) {
     const { userId } = userData;
 

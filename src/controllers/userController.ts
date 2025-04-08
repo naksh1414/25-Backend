@@ -177,4 +177,20 @@ export class UserController {
       );
     }
   }
+
+  async getUser(req: Request, res: Response) {
+    try {
+      const user = await this.userService.getUser(
+        req.params.userId
+      );
+      sendSuccess(res, MESSAGES.UPDATE_SUCCESS, { user });
+    } catch (error: any) {
+      sendError(
+        res,
+        error.message || MESSAGES.SERVER_ERROR,
+        STATUS_CODES.BAD_REQUEST,
+        error
+      );
+    }
+  }
 }

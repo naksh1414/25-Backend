@@ -27,6 +27,11 @@ router.delete(
   eventController.deleteEvent.bind(eventController)
 );
 
+router.post(
+  "/events/check-registration",
+  eventController.checkMemberRegistered.bind(eventController)
+);
+
 router.get("/events", eventController.getAllEvents.bind(eventController));
 router.get("/events/:slug", eventController.getEventBySlug.bind(eventController));
 

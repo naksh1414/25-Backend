@@ -27,7 +27,6 @@ const userSchema = new Schema({
   rollNo: {
     type: String,
     required: false,
-    unique: true,
   },
   college: {
     type: String,
@@ -36,8 +35,7 @@ const userSchema = new Schema({
   libId: {
     type: String,
     required: false,
-    unique: true,
-  },
+    },
   gender: {
     type: String,
     required: false,

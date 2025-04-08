@@ -30,6 +30,16 @@ export class EventController {
     }
   }
 
+  async checkMemberRegistered(req: Request, res: Response) {
+    try {
+      const { userId, eventSlug } = req.body;
+      const isRegistered = await eventService.checkMemberResgistered(userId, eventSlug);
+      sendSuccess(res, MESSAGES.EVENT_FETCH, { isRegistered });
+    } catch (error) {
+      sendError(res, MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER, error);
+    }
+  }
+
   async deleteEvent(req: Request, res: Response) {
     try {
       const { slug } = req.params;

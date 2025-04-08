@@ -46,8 +46,8 @@ export class TeamController {
 
   async getUserRegisteredEvents(req: Request, res: Response) {
   try {
-    const { userId } = req.query
-    console.log(req.query);
+    const { userId } = req.body
+    console.log(req.body);
     
     if (!userId) {
       return sendError(

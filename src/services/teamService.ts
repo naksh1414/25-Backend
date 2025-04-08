@@ -4,7 +4,6 @@ import { TeamModel } from "../models/team.model";
 import { TeamMemberModel } from "../models/members.model";
 
 export class TeamService {
-
   // Add this method to TeamService
 async fetchUserRegisteredEvents(userId: string) {
   // Find teams where user is the leader
@@ -37,35 +36,29 @@ async getTeamById(teamId: string) {
     .lean();
 }
 
-  async addTeam(TeamData: {
-    eventId: string;
-    eventSlug: string;
-    leaderId: string;
-    teamName: string;
-    isVerified: boolean;
-  }) {
-    const { eventId, eventSlug, leaderId, teamName, isVerified } = TeamData;
+async addTeam(TeamData: {
+  eventSlug: string;
+  leaderId: string;
+  teamName: string; 
+  isVerified: boolean;
+}) {
+  const {  eventSlug, leaderId, teamName, isVerified } = TeamData;
 
-    const existingEvent = await EventModel.findOne({ _id: eventId });
-    if (!existingEvent) {
-      throw new Error("Event not exists");
-    }
+  const existingEvent = await EventModel.findOne({ slug: eventSlug });
+  if (!existingEvent) {
+    throw new Error("Event not exists");
+  }
 
-    const teamCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+  const teamCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
-    const existingTeam = await TeamModel.findOne({ eventId, teamName });
-    if (existingTeam) {
-      throw new Error("Team name already exists for this event");
-    }
+  const existingTeam = await TeamModel.findOne({ eventSlug, teamName });
+  if (existingTeam) {
+    throw new Error("Team name already exists for this event");
+  }
 
-    const existingUser = await UserModel.findOne({ _id: leaderId });
 
-    if (!existingUser) {
-      throw new Error("User not exists");
-    }
-
-    const team = new TeamModel({
-      eventId,
+  const team = new TeamModel({
+    eventId: existingEvent.id,
       eventSlug,
       leaderId,
       teamName,
@@ -148,7 +141,7 @@ async getTeamById(teamId: string) {
     // Return both member and team data to allow frontend to update properly
     return {
       member,
-      team: existingTeam
+      team: existingTeam,
     };
   }
 
@@ -158,7 +151,7 @@ async getTeamById(teamId: string) {
 
   async fetchTeamsbyEventId(eventId: string) {
     return await TeamModel.find({ eventId })
-      .populate('eventId', 'name description startDate endDate venue image')
+      .populate("eventId", "name description startDate endDate venue image")
       .lean();
   }
 

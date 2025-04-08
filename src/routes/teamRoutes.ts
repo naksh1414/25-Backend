@@ -22,7 +22,7 @@ router.get("/teams/:id", authenticate, (req, res) =>
   teamController.getTeamById(req, res)
 );
 
-router.get("/user/teams", authenticate, (req, res) =>
+router.post("/user/teams", authenticate, (req, res) =>
   teamController.getUserRegisteredEvents(req, res)
 );
 

@@ -1,5 +1,8 @@
-// services/eventService.ts
+import e from "express";
 import { EventModel } from "../models/event.model";
+import { TeamMemberModel } from "../models/members.model";
+import { TeamModel } from "../models/team.model";
+import { TeamService } from "./teamService";
 
 export class EventService {
   async createEvent(eventData: any) {
@@ -18,8 +21,12 @@ export class EventService {
   }
 
   async flagDeleteEvent(slug: string) {
-    return await EventModel.findOneAndUpdate({ slug }, { isDeleted: true }, { new: true });
-  }
+    return await EventModel.findOneAndUpdate(
+      { slug },
+      { isDeleted: true },
+      { new: true }
+    );
+  }  
 
   async getAllEvents() {
     return await EventModel.find();
@@ -27,5 +34,26 @@ export class EventService {
 
   async getEventBySlug(slug: string) {
     return await EventModel.findOne({ slug });
+  }
+
+  async checkMemberResgistered(userId: string, eventSlug: string) {
+    const teamAsLeader = await TeamModel.findOne({
+      eventSlug,
+      leaderId: userId
+    });
+
+    if (teamAsLeader) return true;
+
+    // Check if user is a team member for this event
+    const teamAsMember = await TeamModel.findOne({
+      eventSlug,
+      members: {
+        $in: await TeamMemberModel.find({ userId }).distinct('_id')
+      }
+    });
+
+    console.log(teamAsMember)
+
+    return !!teamAsMember;
   }
 }

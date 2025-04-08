@@ -24,6 +24,10 @@ router.get("/users", authenticate, (req, res) =>
   userController.fetchAllUsers(req, res)
 );
 
+router.get("/users/:userId", authenticate, (req, res) =>
+  userController.getUser(req, res)
+);
+
 router.put("/users/:userId", authenticate, (req, res) =>
   userController.updateUser(req, res)
 );
