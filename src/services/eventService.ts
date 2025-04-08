@@ -1,9 +1,7 @@
 import e from "express";
 import { EventModel } from "../models/event.model";
-import { TeamMemberModel } from "../models/members.model";
 import { TeamModel } from "../models/team.model";
-import { TeamService } from "./teamService";
-
+import { TeamMemberModel } from "../models/members.model";
 export class EventService {
   async createEvent(eventData: any) {
     const event = new EventModel(eventData);
@@ -21,13 +19,15 @@ export class EventService {
   }
 
   async flagDeleteEvent(slug: string) {
-    return await EventModel.findOneAndUpdate(
-      { slug },
-      { isDeleted: true },
+    return await EventModel.findOneAndUpdate({ slug }, { isDeleted: true }, { new: true });
+  }
+  async verifyPayment(teamCode: string, isVerified: boolean) {
+    return await TeamModel.findOneAndUpdate(
+      { teamCode },
+      { isVerified },
       { new: true }
     );
-  }  
-
+  }
   async getAllEvents() {
     return await EventModel.find();
   }

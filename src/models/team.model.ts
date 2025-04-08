@@ -40,6 +40,14 @@ const teamSchema = new Schema({
   teamCode:{
     type: String,
     required: true,
+  },
+  paymentTransactionId: {
+    type: String,
+    required: true,
+  },
+  paymentScreenshot: {
+    type: String,
+    required: true,
   }
 });
 
