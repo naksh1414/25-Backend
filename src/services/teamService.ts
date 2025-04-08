@@ -41,8 +41,10 @@ async addTeam(TeamData: {
   leaderId: string;
   teamName: string; 
   isVerified: boolean;
+  paymentTransactionId: string;
+  paymentScreenshot: string;
 }) {
-  const {  eventSlug, leaderId, teamName, isVerified } = TeamData;
+  const {  eventSlug, leaderId, teamName, isVerified, paymentTransactionId, paymentScreenshot } = TeamData;
 
   const existingEvent = await EventModel.findOne({ slug: eventSlug });
   if (!existingEvent) {
@@ -65,6 +67,8 @@ async addTeam(TeamData: {
       isVerified,
       isRegisterd: true,
       teamCode,
+      paymentTransactionId,
+      paymentScreenshot,
     });
 
     const existingMember = await TeamMemberModel.findOne({
