@@ -17,8 +17,11 @@ export const MESSAGES = {
     FORGOT_PASSWORD_SUCCESS: "Password reset OTP sent successfully",
     OTP_RESENT_SUCCESS: "OTP resent successfully",
     EVENTS_FETCH: "Events fetched successfully",
+    PAYMENT_VERIFIED: "Payment verified successfully",
+
   
     // Error messages
+    TEAM_NOT_FOUND: "Team not found",
     EMAIL_EXISTS: "Email already exists",
     INVALID_CREDENTIALS: "Invalid credentials",
     INVALID_OTP: "Invalid or expired OTP",
