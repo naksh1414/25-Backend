@@ -26,25 +26,25 @@ const userSchema = new Schema({
   },
   rollNo: {
     type: String,
-    required: true,
+    required: false,
     unique: true,
   },
   college: {
     type: String,
-    required: true,
+    required: false,
   },
   libId: {
     type: String,
-    required: true,
+    required: false,
     unique: true,
   },
   gender: {
     type: String,
-    required: true,
+    required: false,
   },
   age: {
     type: Number,
-    required: true,
+    required: false,
   },
   otp: {
     type: String,
