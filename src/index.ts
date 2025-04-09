@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors({
-  origin: ["https://e-cell.in"], // Add your frontend URL
+  origin: ["https://e-cell.in","https://endeavour-admin.vercel.app"], // Add your frontend URL
   credentials: true
 }));
 
