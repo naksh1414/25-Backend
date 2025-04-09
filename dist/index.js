@@ -16,7 +16,7 @@ const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
-    origin: ["https://e-cell.in/"], // Add your frontend URL
+    origin: ["https://e-cell.in"], // Add your frontend URL
     credentials: true
 }));
 (0, db_1.connectDB)();
