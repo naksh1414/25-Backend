@@ -10,8 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventService = void 0;
-// services/eventService.ts
 const event_model_1 = require("../models/event.model");
+const team_model_1 = require("../models/team.model");
+const members_model_1 = require("../models/members.model");
 class EventService {
     createEvent(eventData) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -21,12 +22,24 @@ class EventService {
     }
     updateEvent(slug, eventData) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield event_model_1.EventModel.findOneAndUpdate({ slug }, eventData, { new: true });
+            return yield event_model_1.EventModel.findOneAndUpdate({ slug }, eventData, {
+                new: true,
+            });
         });
     }
     deleteEvent(slug) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield event_model_1.EventModel.findOneAndDelete({ slug });
+        });
+    }
+    flagDeleteEvent(slug) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield event_model_1.EventModel.findOneAndUpdate({ slug }, { isDeleted: true }, { new: true });
+        });
+    }
+    verifyPayment(teamCode, isVerified) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield team_model_1.TeamModel.findOneAndUpdate({ teamCode }, { isVerified }, { new: true });
         });
     }
     getAllEvents() {
@@ -37,6 +50,25 @@ class EventService {
     getEventBySlug(slug) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield event_model_1.EventModel.findOne({ slug });
+        });
+    }
+    checkMemberResgistered(userId, eventSlug) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const teamAsLeader = yield team_model_1.TeamModel.findOne({
+                eventSlug,
+                leaderId: userId
+            });
+            if (teamAsLeader)
+                return true;
+            // Check if user is a team member for this event
+            const teamAsMember = yield team_model_1.TeamModel.findOne({
+                eventSlug,
+                members: {
+                    $in: yield members_model_1.TeamMemberModel.find({ userId }).distinct('_id')
+                }
+            });
+            console.log(teamAsMember);
+            return !!teamAsMember;
         });
     }
 }
