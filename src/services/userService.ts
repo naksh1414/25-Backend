@@ -10,27 +10,19 @@ import mongoose from "mongoose";
 import { generateUniqueSlug } from "../utils/generateSlug";
 
 export class UserService {
-  async registerUser(userData: {
+
+   async registerUser(userData: {
     name: string;
     email: string;
     phone: string;
     password: string;
-    rollNo: string;
-    college: string;
-    libId: string;
-    age: number;
-    gender: string;
+   
   }) {
     const {
       name,
       email,
       phone,
       password,
-      rollNo,
-      libId,
-      college,
-      age,
-      gender,
     } = userData;
 
     const existingUser = await UserModel.findOne({ email });
@@ -43,11 +35,11 @@ export class UserService {
       name,
       email,
       phone,
-      rollNo,
-      college,
-      age,
-      gender,
-      libId,
+      rollNo:"",
+      college:'',
+      age:"",
+      gender:"",
+      libId:"",
       password: hashedPassword,
       isVerified: false, // Added isVerified field
     });
@@ -68,7 +60,7 @@ export class UserService {
     await this.sendVerificationEmail(email, name, otp);
     return user;
   }
-
+  
   async getUser(userId: string) {
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
